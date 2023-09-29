@@ -12,14 +12,15 @@ def make_bingo_card_image(image_path, text="Hier had uw \n - \ntekst kunnen staa
     image = Image.open(image_template_path)
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype("arial.ttf", 36)
-        
+
     draw.text((x, y), text, fill="black", font=font)
+    image_final = image.rotate(90)
 
     # Save the modified image to a temporary file
     temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
-    image.save(temp_file.name, "JPEG")
+    image_final.save(temp_file.name, "JPEG")
     temp_file.close()
-    
+
     return temp_file.name  # Return the path to the temporary image file
 
 def create_pdf(image_paths, pdf_path):
@@ -43,7 +44,7 @@ def create_pdf(image_paths, pdf_path):
 
 
 # user input
-no_cards = 5
+no_cards = 2
 image_template_path = 'template.jpg'
 pdf_path = 'bingo_cards.pdf'
 
@@ -52,6 +53,7 @@ image_paths = []
 for i in range(0, no_cards):
     img_path = make_bingo_card_image(image_path=image_template_path, text="Kaart #"+str(i+1))
     image_paths.append(img_path)
+
 
 create_pdf(image_paths, pdf_path)
 
