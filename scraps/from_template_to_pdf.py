@@ -14,11 +14,11 @@ def make_bingo_card_image(image_path, text="Hier had uw \n - \ntekst kunnen staa
     font = ImageFont.truetype("arial.ttf", 36)
 
     draw.text((x, y), text, fill="black", font=font)
-    image_final = image.rotate(90)
+    image_rotated = image.rotate(90)
 
     # Save the modified image to a temporary file
     temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
-    image_final.save(temp_file.name, "JPEG")
+    image_rotated.save(temp_file.name, "JPEG")
     temp_file.close()
 
     return temp_file.name  # Return the path to the temporary image file
