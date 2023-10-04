@@ -2,7 +2,7 @@ from tkinter import filedialog, simpledialog
 import tkinter as tk
 import random
 from scraps import read_xlsx
-import format_string
+import split_string
 
 ############################################################################################
 
