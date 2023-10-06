@@ -1,85 +1,50 @@
-import math
 from PIL import Image, ImageDraw, ImageFont
 import tempfile
-from math import ceil
+import textwrap
 
-def split_song(string):
-    title = (str(string.split('--')[0]))
-    return title
-def split_artist(string):
-    artist = (str(string.split('--')[1]))
-    return artist
+def make_bingo_card(image_path, df, card_size=9):
+    image_path = r'n:\My Documents\Julien\iQuizzen\music_bingo\scraps\template.jpg'
+    img = Image.open(image_path)
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype("cour.ttf", 20)
 
-def px_removal_to_center(string):
-    pixels_removed_to_center = math.ceil(((len(string)/2)*11.05)) #13 pixels are use by fontsize 20 with arial
-    return pixels_removed_to_center
+    line_width,line_height = draw.textsize('-', font)
+    x_center = [170, 450, 720] # center-coordinate (x-axis) of each columnn
+    y_center = [290, 525, 751] # center-coordinate (y-axis) of each row
+    char_max = 14 # max nr of characters
 
-def make_bingo_card_9(bingocard, image_path):
-    image = Image.open(image_path)
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype("arial.ttf", 20)
-
-    #creating variables // this might also be done in a loop? to-do
-    song_1 = split_song(bingocard[0])
-    song_2 = split_song(bingocard[1])
-    song_3 = split_song(bingocard[2])
-    song_4 = split_song(bingocard[3])
-    song_5 = split_song(bingocard[4])
-    song_6 = split_song(bingocard[5])
-    song_7 = split_song(bingocard[6])
-    song_8 = split_song(bingocard[7])
-    song_9 = split_song(bingocard[8])
-
-    artist_1 = split_artist(bingocard[0])
-    artist_2 = split_artist(bingocard[1])
-    artist_3 = split_artist(bingocard[2])
-    artist_4 = split_artist(bingocard[3])
-    artist_5 = split_artist(bingocard[4])
-    artist_6 = split_artist(bingocard[5])
-    artist_7 = split_artist(bingocard[6])
-    artist_8 = split_artist(bingocard[7])
-    artist_9 = split_artist(bingocard[8])
-
-    #Defining the center (x-axis) op each columnn
-    center_column_one = 170
-    center_column_two = 450
-    center_column_three = 720
-
-    #Define the center (y-axis) of each row
-    center_row_one = 290
-    center_row_two = 525
-    center_row_three = 751
-
-    #spacing between rows in px
-    spacing_rows = 12
-
-    #printing text on the right spot
-    draw.text(((center_column_one - px_removal_to_center(song_1)), (center_row_one - spacing_rows)), song_1, fill="black", font=font)
-    draw.text(((center_column_one - px_removal_to_center(artist_1)), (center_row_one + spacing_rows)), artist_1, fill="black", font=font)
-    draw.text(((center_column_one - px_removal_to_center(song_2)), (center_row_two - spacing_rows)), song_2, fill="black", font=font)
-    draw.text(((center_column_one - px_removal_to_center(artist_2)), (center_row_two + spacing_rows)), artist_2, fill="black", font=font)
-    draw.text(((center_column_one - px_removal_to_center(song_3)), (center_row_three - spacing_rows)), song_3, fill="black", font=font)
-    draw.text(((center_column_one - px_removal_to_center(artist_3)), (center_row_three + spacing_rows)), artist_3, fill="black", font=font)
-
-    draw.text(((center_column_two - px_removal_to_center(song_4)), center_row_one - spacing_rows), song_4, fill="black", font=font)
-    draw.text(((center_column_two - px_removal_to_center(artist_4)), center_row_one + spacing_rows), artist_4, fill="black", font=font)
-    draw.text(((center_column_two - px_removal_to_center(song_5)), (center_row_two - spacing_rows)), song_5, fill="black", font=font)
-    draw.text(((center_column_two - px_removal_to_center(artist_5)), (center_row_two + spacing_rows)), artist_5, fill="black", font=font)
-    draw.text(((center_column_two - px_removal_to_center(song_6)), (center_row_three - spacing_rows)), song_6, fill="black", font=font)
-    draw.text(((center_column_two - px_removal_to_center(artist_6)), (center_row_three + spacing_rows)), artist_6, fill="black", font=font)
-
-    draw.text(((center_column_three - px_removal_to_center(song_7)), center_row_one - spacing_rows), song_7, fill="black", font=font)
-    draw.text(((center_column_three - px_removal_to_center(artist_7)), center_row_one + spacing_rows), artist_7, fill="black", font=font)
-    draw.text(((center_column_three - px_removal_to_center(song_8)), (center_row_two - spacing_rows)), song_8, fill="black", font=font)
-    draw.text(((center_column_three - px_removal_to_center(artist_8)), (center_row_two + spacing_rows)), artist_8, fill="black", font=font)
-    draw.text(((center_column_three - px_removal_to_center(song_9)), (center_row_three - spacing_rows)), song_9, fill="black", font=font)
-    draw.text(((center_column_three - px_removal_to_center(artist_9)), (center_row_three + spacing_rows)), artist_9, fill="black", font=font)
-
-    image_rotated = image.rotate(90)
+    num_rows_cols = int(len(df) ** 0.5)
+    for row in range(num_rows_cols):
+        for col in range(num_rows_cols):
+            ind = row*3+col
+            
+            x_cen = x_center[col]
+            y_cen = y_center[row]
+            
+            # print artist
+            artist_wrapped = textwrap.fill(df['artist'][ind], width=char_max)
+            text_width, text_height = draw.textsize(artist_wrapped, font)
+            x = x_cen - text_width/2
+            y = y_cen - 1.3*line_height - text_height
+            draw.text((x, y), artist_wrapped, fill="black", font=font)
+            
+            # print '-'
+            x = x_cen
+            y = y_cen
+            draw.text((x, y), '-', fill="black", font=font)
+            
+            # print title
+            title_wrapped = textwrap.fill(df['title'][ind], width=char_max)
+            text_width, text_height = draw.textsize(title_wrapped, font)
+            x = x_cen - text_width/2
+            y = y_cen + 1.3*line_height
+            draw.text((x, y), title_wrapped, fill="black", font=font)
+            
+    img_rotated = img.transpose(Image.ROTATE_90)
 
     # Save the modified image to a temporary file
     temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
-    image_rotated.save(temp_file.name, "JPEG")
+    img_rotated.save(temp_file.name, "JPEG")
     temp_file.close()
 
     return temp_file.name
