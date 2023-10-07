@@ -25,9 +25,9 @@ def get_user_input():
     jpg_path = get_file_path("Open JPG-bestand met de bingokaart...", [("JPG Files", "*.jpg")])
     print("Locatie JPG-bestand:", jpg_path)
 
-    n_cards = get_integer_input("Aantal bingokaarten:", "Aantal bingokaarten")
-    print("Aantal bingokaarten:", n_cards)
+    num_cards = get_integer_input("Aantal bingokaarten:", "Aantal bingokaarten")
+    print("Aantal bingokaarten:", num_cards)
 
     pdf_path = filedialog.asksaveasfilename(title="Sla het PDF-bestand op als...", filetypes=[("PDF Files", "*.pdf")], defaultextension=".pdf")
 
-    return xlsx_path, jpg_path, n_cards, pdf_path
+    return xlsx_path, jpg_path, num_cards, pdf_path
