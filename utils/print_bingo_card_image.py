@@ -3,7 +3,6 @@ import tempfile
 import textwrap
 
 def make_bingo_card(image_path, df, card_size=9):
-    image_path = r'n:\My Documents\Julien\iQuizzen\music_bingo\scraps\template.jpg'
     img = Image.open(image_path)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("cour.ttf", 20)
@@ -16,13 +15,13 @@ def make_bingo_card(image_path, df, card_size=9):
     num_rows_cols = int(len(df) ** 0.5)
     for row in range(num_rows_cols):
         for col in range(num_rows_cols):
-            ind = row*3+col
+            index = row*3+col
             
             x_cen = x_center[col]
             y_cen = y_center[row]
             
             # print artist
-            artist_wrapped = textwrap.fill(df['artist'][ind], width=char_max)
+            artist_wrapped = textwrap.fill(df['artist'][index], width=char_max)
             text_width, text_height = draw.textsize(artist_wrapped, font)
             x = x_cen - text_width/2
             y = y_cen - 1.3*line_height - text_height
@@ -34,7 +33,7 @@ def make_bingo_card(image_path, df, card_size=9):
             draw.text((x, y), '-', fill="black", font=font)
             
             # print title
-            title_wrapped = textwrap.fill(df['title'][ind], width=char_max)
+            title_wrapped = textwrap.fill(df['title'][index], width=char_max)
             text_width, text_height = draw.textsize(title_wrapped, font)
             x = x_cen - text_width/2
             y = y_cen + 1.3*line_height
