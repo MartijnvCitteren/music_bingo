@@ -4,7 +4,14 @@ from utils import (user_input,
 import pandas as pd
 
 def main():
-    xlsx_path, jpg_path, num_cards, pdf_path = user_input.get_user_input()
+    if 1:
+        xlsx_path, jpg_path, num_cards, pdf_path = user_input.get_user_input()
+    else: # useful for debugging without providing input all the time
+        xlsx_path = r'c:\JG\check-outs\music_bingo\scraps\titel_artiest_example.xlsx'
+        jpg_path = r'c:\JG\check-outs\music_bingo\scraps\template.jpg'
+        num_cards = 3
+        pdf_path = r'c:\JG\check-outs\music_bingo\scraps\test.pdf'
+    
     df_all = pd.read_excel(xlsx_path, names=['title', 'artist'])
     card_size = 9 # For now hardcoded, 3x3 bingo card
     
